@@ -19,8 +19,8 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(questions.router, prefix="/questions", tags=["questions"])
-app.include_router(mocktest.router, prefix="/mocktest", tags=["mocktest"])
+app.include_router(questions.router, prefix="/api/questions", tags=["questions"])
+app.include_router(mocktest.router, prefix="/api/mocktest", tags=["mocktest"])
 
 @app.get("/")
 async def root():

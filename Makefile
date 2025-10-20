@@ -64,3 +64,20 @@ shell-api:
 shell-frontend:
 	@echo "⚛️  Opening bash shell in frontend container..."
 	docker-compose exec frontend sh
+
+prod:
+	@echo "🚀 Starting HPC Goat services in production..."
+	docker compose -f docker-compose.prod.yaml up --build -d
+
+prod-stop:
+	@echo "🛑 Stopping HPC Goat services in production..."
+	docker compose -f docker-compose.prod.yaml down
+
+prod-logs:
+	@echo "📋 Showing logs from HPC Goat services in production..."
+	docker compose -f docker-compose.prod.yaml logs -f
+
+prod-restart:
+	@echo "🔄 Restarting HPC Goat services in production..."
+	docker compose -f docker-compose.prod.yaml down
+	docker compose -f docker-compose.prod.yaml up --build -d

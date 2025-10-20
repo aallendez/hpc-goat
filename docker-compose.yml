@@ -44,6 +44,22 @@ services:
     networks:
       - hpc-network
 
+  nginx:
+    image: nginx:latest
+    container_name: hpc-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt:/etc/letsencrypt  
+    depends_on:
+      - api
+      - frontend
+    networks:
+      - hpc-network
+
+
 volumes:
   postgres_data:
 
