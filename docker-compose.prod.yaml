@@ -35,6 +35,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: hpc-frontend
+    env_file:
+      - .env
     environment:
       VITE_API_URL: https://hpc-goat.xyz
     depends_on:
