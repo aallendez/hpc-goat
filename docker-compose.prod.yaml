@@ -65,7 +65,7 @@ services:
 volumes:
   postgres_data:
   frontend_dist:
-
+ 
 networks:
   hpc-network:
     driver: bridge
