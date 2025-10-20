@@ -1,10 +1,10 @@
-# HPC Saviour - Makefile for easy development
+# HPC Goat - Makefile for easy development
 
 .PHONY: help run stop clean build logs shell-db shell-api shell-frontend
 
 # Default target
 help:
-	@echo "HPC Saviour - Available commands:"
+	@echo "HPC Goat - Available commands:"
 	@echo ""
 	@echo "  make run          - Start all services (db, api, frontend)"
 	@echo "  make stop         - Stop all services"
@@ -22,7 +22,7 @@ help:
 
 # Start all services
 run:
-	@echo "🚀 Starting HPC Saviour services..."
+	@echo "🚀 Starting HPC Goat services..."
 	@echo "📊 Database: PostgreSQL"
 	@echo "🔧 Backend: FastAPI"
 	@echo "⚛️  Frontend: React"

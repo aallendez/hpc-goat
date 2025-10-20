@@ -4,7 +4,7 @@ import { questionsAPI, type UploadResult } from '../api/client';
 
 export function meta() {
   return [
-    { title: 'Upload Questions - HPC Saviour' },
+    { title: 'Upload Questions - HPC Goat' },
     { name: 'description', content: 'Upload multiple choice questions for HPC knowledge base' },
   ];
 }
@@ -90,7 +90,7 @@ SQL`;
     <div className="container">
       <header className="header">
         <div className="header-content">
-          <h1>HPC Saviour</h1>
+          <h1>HPC Goat</h1>
           <p>Master HPC concepts with interactive mock tests</p>
         </div>
       </header>

@@ -4,7 +4,7 @@ from app.core.config import settings
 from app.api.routes import questions, mocktest
 
 app = FastAPI(
-    title="HPC Saviour API",
+    title="HPC Goat API",
     description="API for HPC mock test application",
     version="1.0.0"
 )
@@ -24,7 +24,7 @@ app.include_router(mocktest.router, prefix="/mocktest", tags=["mocktest"])
 
 @app.get("/")
 async def root():
-    return {"message": "HPC Saviour API is running"}
+    return {"message": "HPC Goat API is running"}
 
 @app.get("/health")
 async def health_check():

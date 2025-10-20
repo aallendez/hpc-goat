@@ -3,7 +3,7 @@
 
 CREATE TABLE IF NOT EXISTS questions (
     id SERIAL PRIMARY KEY,
-    question_text VARCHAR(1000) UNIQUE NOT NULL,
+    question_text VARCHAR(5000) UNIQUE NOT NULL,
     option_a VARCHAR(500),
     option_b VARCHAR(500),
     option_c VARCHAR(500),

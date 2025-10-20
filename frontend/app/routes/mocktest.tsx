@@ -2,9 +2,90 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { mockTestAPI, type Question, type TestResult, type AnswerSubmission } from '../api/client';
 
+// Utility function to detect and format code snippets
+const formatQuestionText = (text: string) => {
+  // Split text by newlines to process line by line
+  const lines = text.split('\n');
+  const formattedElements: React.ReactNode[] = [];
+  let currentCodeBlock: string[] = [];
+  let inCodeBlock = false;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    // Check if this line looks like code
+    const isCodeLine = line.includes('#pragma') || 
+                      line.includes('#include') ||
+                      line.includes('#define') ||
+                      line.includes('#ifdef') ||
+                      line.includes('#ifndef') ||
+                      line.includes('for(') || 
+                      line.includes('if(') || 
+                      line.includes('{') || 
+                      line.includes('}') ||
+                      line.includes('int ') ||
+                      line.includes('float ') ||
+                      line.includes('double ') ||
+                      line.includes('char ') ||
+                      line.includes('void ') ||
+                      line.includes('return') ||
+                      line.includes('while(') ||
+                      line.includes('do {') ||
+                      line.includes('//') ||
+                      line.includes('/*') ||
+                      line.includes('*/') ||
+                      // More specific MPI detection - only if it looks like a function call
+                      (line.includes('MPI_') && (line.includes('(') || line.includes(';') || line.includes('='))) ||
+                      (inCodeBlock && (line.trim() === '' || line.includes(';') || line.includes('{') || line.includes('}')));
+    
+    if (isCodeLine) {
+      if (!inCodeBlock) {
+        // Start of code block
+        inCodeBlock = true;
+        currentCodeBlock = [line];
+      } else {
+        // Continue code block
+        currentCodeBlock.push(line);
+      }
+    } else {
+      if (inCodeBlock) {
+        // End of code block, render it
+        formattedElements.push(
+          <div key={`code-${i}`} className="question-code">
+            <code>{currentCodeBlock.join('\n')}</code>
+          </div>
+        );
+        currentCodeBlock = [];
+        inCodeBlock = false;
+      }
+      
+      // Add regular text
+      if (line.trim()) {
+        formattedElements.push(
+          <span key={`text-${i}`}>{line}</span>
+        );
+        if (i < lines.length - 1) {
+          formattedElements.push(<br key={`br-${i}`} />);
+        }
+      }
+    }
+  }
+  
+  // Handle case where text ends with code block
+  if (inCodeBlock && currentCodeBlock.length > 0) {
+    formattedElements.push(
+      <div key="code-end" className="question-code">
+        <code>{currentCodeBlock.join('\n')}</code>
+      </div>
+    );
+  }
+  
+  return formattedElements;
+};
+
 export function meta() {
   return [
-    { title: 'Mock Test - HPC Saviour' },
+    { title: 'Mock Test - HPC Goat' },
     { name: 'description', content: 'Take a mock test to test your HPC knowledge' },
   ];
 }
@@ -28,7 +109,7 @@ export default function MockTest() {
     setAnswers({});
 
     try {
-      const response = await mockTestAPI.startTest(5); // Get 5 questions
+      const response = await mockTestAPI.startTest(500); // Get 5 questions
       setQuestions(response.data.questions);
       setTestStarted(true);
     } catch (err: any) {
@@ -79,7 +160,7 @@ export default function MockTest() {
       <div className="container">
         <header className="header">
           <div className="header-content">
-            <h1>HPC Saviour</h1>
+            <h1>HPC Goat</h1>
             <p>Master HPC concepts with interactive mock tests</p>
           </div>
         </header>
@@ -117,7 +198,7 @@ export default function MockTest() {
       <div className="container">
         <header className="header">
           <div className="header-content">
-            <h1>HPC Saviour</h1>
+            <h1>HPC Goat</h1>
             <p>Master HPC concepts with interactive mock tests</p>
           </div>
         </header>
@@ -187,7 +268,7 @@ export default function MockTest() {
       <div className="container">
         <header className="header">
           <div className="header-content">
-            <h1>HPC Saviour</h1>
+            <h1>HPC Goat</h1>
             <p>Master HPC concepts with interactive mock tests</p>
           </div>
         </header>
@@ -256,7 +337,7 @@ export default function MockTest() {
     <div className="container">
       <header className="header">
         <div className="header-content">
-          <h1>HPC Saviour</h1>
+          <h1>HPC Goat</h1>
           <p>Master HPC concepts with interactive mock tests</p>
         </div>
       </header>
@@ -314,7 +395,7 @@ export default function MockTest() {
                 </span>
               </div>
               <div className="question-text">
-                {question.question_text}
+                {formatQuestionText(question.question_text)}
               </div>
               <div className="options">
                 {['a', 'b', 'c', 'd'].map(option => (

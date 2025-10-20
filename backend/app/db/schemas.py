@@ -3,7 +3,7 @@ from typing import Optional, List
 from datetime import datetime
 
 class QuestionBase(BaseModel):
-    question_text: str = Field(..., min_length=10, max_length=1000, description="The question text")
+    question_text: str = Field(..., min_length=10, max_length=5000, description="The question text")
     option_a: str = Field(..., min_length=1, max_length=500, description="Option A")
     option_b: str = Field(..., min_length=1, max_length=500, description="Option B")
     option_c: str = Field(..., min_length=1, max_length=500, description="Option C")

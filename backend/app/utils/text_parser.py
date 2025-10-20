@@ -35,19 +35,40 @@ class QuestionTextParser:
         options = {}
         correct_answer = ""
         
-        # Look for the question text - it's usually the longest line that's not an option
+        # Look for the question text - collect all non-option lines
         question_candidates = []
         in_options = False
+        code_block = []
+        in_code_block = False
         
         for line in lines:
             if line.startswith('Option'):
                 in_options = True
+                # If we were in a code block, add it to question text
+                if in_code_block and code_block:
+                    question_candidates.append('\n'.join(code_block))
+                    code_block = []
+                    in_code_block = False
             elif not in_options and line and not line.startswith('Question') and not line.isdigit() and not line.startswith('Point'):
-                question_candidates.append(line)
+                # Check if this looks like code (contains #pragma, #include, for, if, etc.)
+                # More specific MPI detection - only if it looks like a function call
+                is_mpi_code = 'MPI_' in line and ('(' in line or ';' in line or '=' in line)
+                if any(keyword in line for keyword in ['#pragma', '#include', '#define', '#ifdef', '#ifndef', 'for(', 'if(', '{', '}', 'int ', 'float ', 'double ', 'char ', 'void ', 'return', 'while(', 'do {', '//', '/*', '*/']) or is_mpi_code:
+                    in_code_block = True
+                    code_block.append(line)
+                elif in_code_block:
+                    # Continue code block if we're already in one
+                    code_block.append(line)
+                else:
+                    question_candidates.append(line)
         
-        # The question is usually the longest candidate
+        # If we ended in a code block, add it to question text
+        if in_code_block and code_block:
+            question_candidates.append('\n'.join(code_block))
+        
+        # Combine all question candidates into the question text
         if question_candidates:
-            question_text = max(question_candidates, key=len)
+            question_text = '\n'.join(question_candidates)
         
         # Extract options
         current_option = None

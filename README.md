@@ -1,4 +1,4 @@
-# HPC Saviour - Mock Test Application
+# HPC Goat - Mock Test Application
 
 A simple mock test application for HPC (High Performance Computing) questions built with PostgreSQL, FastAPI, and React.
 

@@ -8,7 +8,7 @@ class Question(Base):
     __tablename__ = "questions"
     
     id = Column(Integer, primary_key=True, index=True)
-    question_text = Column(String(1000), unique=True, nullable=False)
+    question_text = Column(String(5000), unique=True, nullable=False)
     option_a = Column(String(500))
     option_b = Column(String(500))
     option_c = Column(String(500))
