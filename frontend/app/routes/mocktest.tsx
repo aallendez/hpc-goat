@@ -126,7 +126,7 @@ export default function MockTest() {
 
     try {
       const topicsToUse = selectedTopics.length > 0 ? selectedTopics : undefined;
-      const response = await mockTestAPI.startTest(5, topicsToUse); // Get 5 questions
+      const response = await mockTestAPI.startTest(1000, topicsToUse); // Get all questions
       setQuestions(response.data.questions);
       setTestStarted(true);
     } catch (err: any) {
@@ -259,7 +259,7 @@ export default function MockTest() {
           <div className="test-intro-content">
             <h2 className="test-title">Ready to Test Your HPC Knowledge?</h2>
             <p className="test-description">
-              Challenge yourself with 5 randomly selected questions from our comprehensive HPC database. 
+              Challenge yourself with all available questions from our comprehensive HPC database. 
               Test your understanding of parallel computing, distributed systems, and high-performance algorithms.
             </p>
             
@@ -274,7 +274,7 @@ export default function MockTest() {
               </div>
               <div className="feature">
                 <span className="feature-icon">🎯</span>
-                <span>5 questions</span>
+                <span>All questions</span>
               </div>
             </div>
 
@@ -461,9 +461,7 @@ export default function MockTest() {
           </div>
           <span className="progress-text">
             {Object.keys(answers).length} / {questions.length} answered
-            {Object.keys(answers).length < questions.length && (
-              <span className="progress-note"> (You can submit with unanswered questions)</span>
-            )}
+            {Object.keys(answers).length < questions.length}
           </span>
         </div>
       </div>

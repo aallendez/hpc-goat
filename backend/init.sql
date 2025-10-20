@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS questions (
     option_c VARCHAR(500),
     option_d VARCHAR(500),
     correct_answer VARCHAR(500),
+    topic VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
