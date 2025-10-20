@@ -15,22 +15,8 @@ export default function Home() {
     <div className="container">
       <header className="header">
         <div className="header-content">
-          <h1>HPC Goat</h1>
+          <Link to="/" className="font-bold hover:underline cursor-pointer"><h1>HPC Goat</h1></Link>
           <p>Master HPC concepts with interactive mock tests</p>
-          <div className="header-stats">
-            <div className="stat">
-              <span className="stat-number">100+</span>
-              <span className="stat-label">Questions</span>
-            </div>
-            <div className="stat">
-              <span className="stat-number">50+</span>
-              <span className="stat-label">Students</span>
-            </div>
-            <div className="stat">
-              <span className="stat-number">95%</span>
-              <span className="stat-label">Success Rate</span>
-            </div>
-          </div>
         </div>
       </header>
       

@@ -198,7 +198,7 @@ export default function MockTest() {
       <div className="container">
         <header className="header">
           <div className="header-content">
-            <h1>HPC Goat</h1>
+            <Link to="/" className="font-bold hover:underline cursor-pointer"><h1>HPC Goat</h1></Link>
             <p>Master HPC concepts with interactive mock tests</p>
           </div>
         </header>
@@ -268,7 +268,7 @@ export default function MockTest() {
       <div className="container">
         <header className="header">
           <div className="header-content">
-            <h1>HPC Goat</h1>
+            <Link to="/" className="font-bold hover:underline cursor-pointer"><h1>HPC Goat</h1></Link>
             <p>Master HPC concepts with interactive mock tests</p>
           </div>
         </header>
@@ -337,7 +337,7 @@ export default function MockTest() {
     <div className="container">
       <header className="header">
         <div className="header-content">
-          <h1>HPC Goat</h1>
+          <Link to="/" className="font-bold hover:underline cursor-pointer"><h1>HPC Goat</h1></Link>
           <p>Master HPC concepts with interactive mock tests</p>
         </div>
       </header>
