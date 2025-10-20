@@ -6,6 +6,7 @@ A simple mock test application for HPC (High Performance Computing) questions bu
 
 - Docker and Docker Compose
 - Git
+- OpenAI API Key (for automatic question classification)
 
 ## How to Run
 
@@ -15,15 +16,33 @@ A simple mock test application for HPC (High Performance Computing) questions bu
    cd hpc-saviour
    ```
 
-2. **Install dependencies**:
+2. **Set up environment variables**:
+   Create a `.env` file in the project root with the following content:
    ```bash
-   cd backend
-   pip install -r requirements.txt
-   cd ../frontend
-   npm install
+   # Database Configuration
+   DATABASE_URL=postgresql://user:password@db:5432/hpc_app
+   POSTGRES_USER=user
+   POSTGRES_PASSWORD=password
+   POSTGRES_DB=hpc_app
+
+   # OpenAI API Key (required for question classification)
+   # Get your API key from: https://platform.openai.com/api-keys
+   OPENAI_API_KEY=your-openai-api-key-here
+
+   # Environment
+   ENVIRONMENT=development
+
+   # Frontend Configuration
+   VITE_API_URL=http://localhost:8000
    ```
 
-3. **Start the application**:
+3. **Run database migration** (first time only):
+   ```bash
+   # Connect to your PostgreSQL database and run:
+   psql -d hpc_app -f backend/migrate_add_topic_field.sql
+   ```
+
+4. **Start the application**:
    ```bash
    make run
    ```

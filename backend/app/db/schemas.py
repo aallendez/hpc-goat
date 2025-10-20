@@ -9,6 +9,7 @@ class QuestionBase(BaseModel):
     option_c: str = Field(..., min_length=1, max_length=500, description="Option C")
     option_d: str = Field(..., min_length=1, max_length=500, description="Option D")
     correct_answer: str = Field(..., min_length=1, max_length=500, description="The correct answer")
+    topic: Optional[str] = Field(None, max_length=100, description="The topic classification for this question")
 
     @validator('correct_answer')
     def validate_correct_answer(cls, v, values):
@@ -38,6 +39,7 @@ class MockTestQuestion(BaseModel):
     option_b: str
     option_c: str
     option_d: str
+    topic: Optional[str] = None
 
 class MockTestResponse(BaseModel):
     questions: List[MockTestQuestion] = Field(..., min_items=1, description="List of questions for the mock test")

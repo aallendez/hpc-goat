@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
 import { mockTestAPI, type Question, type TestResult, type AnswerSubmission } from '../api/client';
 
@@ -99,6 +99,22 @@ export default function MockTest() {
   const [testSubmitted, setTestSubmitted] = useState(false);
   const [result, setResult] = useState<TestResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [availableTopics, setAvailableTopics] = useState<string[]>([]);
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [showTopicFilter, setShowTopicFilter] = useState(false);
+
+  // Load available topics on component mount
+  useEffect(() => {
+    const loadTopics = async () => {
+      try {
+        const response = await mockTestAPI.getTopics();
+        setAvailableTopics(response.data);
+      } catch (err) {
+        console.error('Failed to load topics:', err);
+      }
+    };
+    loadTopics();
+  }, []);
 
   const startTest = async () => {
     setLoading(true);
@@ -109,7 +125,8 @@ export default function MockTest() {
     setAnswers({});
 
     try {
-      const response = await mockTestAPI.startTest(500); // Get 5 questions
+      const topicsToUse = selectedTopics.length > 0 ? selectedTopics : undefined;
+      const response = await mockTestAPI.startTest(5, topicsToUse); // Get 5 questions
       setQuestions(response.data.questions);
       setTestStarted(true);
     } catch (err: any) {
@@ -124,6 +141,22 @@ export default function MockTest() {
       ...prev,
       [questionId]: answer
     }));
+  };
+
+  const handleTopicToggle = (topic: string) => {
+    setSelectedTopics(prev => 
+      prev.includes(topic) 
+        ? prev.filter(t => t !== topic)
+        : [...prev, topic]
+    );
+  };
+
+  const handleSelectAllTopics = () => {
+    setSelectedTopics(availableTopics);
+  };
+
+  const handleClearTopics = () => {
+    setSelectedTopics([]);
   };
 
   const submitTest = async () => {
@@ -153,6 +186,8 @@ export default function MockTest() {
     setTestSubmitted(false);
     setResult(null);
     setError(null);
+    setSelectedTopics([]);
+    setShowTopicFilter(false);
   };
 
   if (loading && !testStarted) {
@@ -242,6 +277,62 @@ export default function MockTest() {
                 <span>5 questions</span>
               </div>
             </div>
+
+            {/* Topic Filter Section */}
+            {availableTopics.length > 0 && (
+              <div className="topic-filter-section">
+                <div className="topic-filter-header">
+                  <h3>Filter by Topics (Optional)</h3>
+                  <button 
+                    type="button"
+                    onClick={() => setShowTopicFilter(!showTopicFilter)}
+                    className="btn btn-secondary btn-sm"
+                  >
+                    {showTopicFilter ? 'Hide Filters' : 'Show Filters'}
+                  </button>
+                </div>
+                
+                {showTopicFilter && (
+                  <div className="topic-filter-content">
+                    <div className="topic-filter-actions">
+                      <button 
+                        type="button"
+                        onClick={handleSelectAllTopics}
+                        className="btn btn-outline btn-sm"
+                      >
+                        Select All
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={handleClearTopics}
+                        className="btn btn-outline btn-sm"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+                    
+                    <div className="topic-checkboxes">
+                      {availableTopics.map((topic) => (
+                        <label key={topic} className="topic-checkbox">
+                          <input
+                            type="checkbox"
+                            checked={selectedTopics.includes(topic)}
+                            onChange={() => handleTopicToggle(topic)}
+                          />
+                          <span className="checkbox-label">{topic}</span>
+                        </label>
+                      ))}
+                    </div>
+                    
+                    {selectedTopics.length > 0 && (
+                      <div className="selected-topics">
+                        <strong>Selected topics:</strong> {selectedTopics.join(', ')}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
             
             {error && (
               <div className="alert error">
@@ -359,20 +450,27 @@ export default function MockTest() {
         </Link>
       </nav>
 
+      {/* Sticky Progress Bar */}
+      <div className="sticky-progress">
+        <div className="test-progress">
+          <div className="progress-bar">
+            <div 
+              className="progress-fill" 
+              style={{ width: `${(Object.keys(answers).length / questions.length) * 100}%` }}
+            ></div>
+          </div>
+          <span className="progress-text">
+            {Object.keys(answers).length} / {questions.length} answered
+            {Object.keys(answers).length < questions.length && (
+              <span className="progress-note"> (You can submit with unanswered questions)</span>
+            )}
+          </span>
+        </div>
+      </div>
+
       <div className="test-section">
         <div className="test-header">
           <h2 className="test-title">Mock Test in Progress</h2>
-          <div className="test-progress">
-            <div className="progress-bar">
-              <div 
-                className="progress-fill" 
-                style={{ width: `${(Object.keys(answers).length / questions.length) * 100}%` }}
-              ></div>
-            </div>
-            <span className="progress-text">
-              {Object.keys(answers).length} / {questions.length} answered
-            </span>
-          </div>
         </div>
         
         {error && (
@@ -390,9 +488,14 @@ export default function MockTest() {
             <div key={question.id} className="question-card">
               <div className="question-header">
                 <span className="question-number">Question {index + 1}</span>
-                <span className="question-status">
-                  {answers[question.id] ? '✓ Answered' : '○ Not answered'}
-                </span>
+                <div className="question-meta">
+                  {question.topic && (
+                    <span className="question-topic">{question.topic}</span>
+                  )}
+                  <span className="question-status">
+                    {answers[question.id] ? '✓ Answered' : '○ Not answered'}
+                  </span>
+                </div>
               </div>
               <div className="question-text">
                 {formatQuestionText(question.question_text)}
@@ -438,7 +541,7 @@ export default function MockTest() {
           <button 
             onClick={submitTest} 
             className="btn btn-primary btn-lg"
-            disabled={loading || Object.keys(answers).length !== questions.length}
+            disabled={loading}
           >
             {loading ? (
               <>

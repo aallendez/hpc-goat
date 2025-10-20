@@ -161,16 +161,6 @@ SQL`;
                 )}
               </button>
             </div>
-
-            <div className="example-section">
-              <h4 className="example-title">Example Format</h4>
-              <p className="example-description">
-                Copy and paste questions in this format:
-              </p>
-              <div className="example-code">
-                <pre>{exampleText}</pre>
-              </div>
-            </div>
           </form>
 
           {error && (

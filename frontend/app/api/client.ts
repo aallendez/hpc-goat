@@ -18,6 +18,7 @@ export interface Question {
   option_c: string;
   option_d: string;
   correct_answer: string;
+  topic?: string;
 }
 
 export interface TestResult {
@@ -42,22 +43,31 @@ export interface AnswerSubmission {
 // Questions API
 export const questionsAPI = {
   uploadQuestions: (questions: Omit<Question, 'id'>[]): Promise<AxiosResponse<UploadResult>> =>
-    apiClient.post('/questions/upload', { questions }),
+    apiClient.post('/api/questions/upload', { questions }),
   
   uploadQuestionsFromText: (text: string): Promise<AxiosResponse<UploadResult>> =>
-    apiClient.post('/questions/upload-text', { text }),
+    apiClient.post('/api/questions/upload-text', { text }),
   
   getAllQuestions: (): Promise<AxiosResponse<Question[]>> =>
-    apiClient.get('/questions/'),
+    apiClient.get('/api/questions/'),
 };
 
 // Mock Test API
 export const mockTestAPI = {
-  startTest: (limit: number = 10): Promise<AxiosResponse<{ questions: Question[] }>> =>
-    apiClient.get(`/mocktest/start?limit=${limit}`),
+  startTest: (limit: number = 10, topics?: string[]): Promise<AxiosResponse<{ questions: Question[] }>> => {
+    const params = new URLSearchParams();
+    params.append('limit', limit.toString());
+    if (topics && topics.length > 0) {
+      topics.forEach(topic => params.append('topics', topic));
+    }
+    return apiClient.get(`/api/mocktest/start?${params.toString()}`);
+  },
+  
+  getTopics: (): Promise<AxiosResponse<string[]>> =>
+    apiClient.get('/api/mocktest/topics'),
   
   submitTest: (answers: AnswerSubmission[]): Promise<AxiosResponse<TestResult>> =>
-    apiClient.post('/mocktest/submit', { answers }),
+    apiClient.post('/api/mocktest/submit', { answers }),
 };
 
 export default apiClient;

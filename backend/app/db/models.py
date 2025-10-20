@@ -14,4 +14,5 @@ class Question(Base):
     option_c = Column(String(500))
     option_d = Column(String(500))
     correct_answer = Column(String(500))
+    topic = Column(String(100), nullable=True)  # New topic field
     created_at = Column(DateTime, default=datetime.utcnow)
